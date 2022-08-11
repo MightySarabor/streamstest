@@ -39,7 +39,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>de.hstr.bigdata.StreamExample</mainClass>
+							<mainClass>de.hstr.bigdata.LineSplit</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
