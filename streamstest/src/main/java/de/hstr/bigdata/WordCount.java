@@ -23,8 +23,8 @@ public class WordCount {
         //Eigentlicher Code
         final StreamsBuilder builder = new StreamsBuilder();
 
-        builder.<String, String>stream("fleschm-1")
-                .flatMapValues(value -> Arrays.asList(value.toLowerCase(Locale.getDefault()).split("\\W+")))
+        KStream<String, String> source = builder.stream("fleschm-1");
+        source.flatMapValues(value -> Arrays.asList(value.toLowerCase(Locale.getDefault()).split("\\W+")))
                 .groupBy((key, value) -> value)
                 .count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("counts-store"))
                 .toStream()
@@ -45,6 +45,7 @@ public class WordCount {
 
         //Topology beschreiben
         final Topology topology = builder.build();
+        System.out.println(topology.describe());
         final KafkaStreams streams = new KafkaStreams(topology, config);
         final CountDownLatch latch = new CountDownLatch(1);
 
