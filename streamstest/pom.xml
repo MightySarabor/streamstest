@@ -39,7 +39,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>de.hstr.bigdata.LineSplit</mainClass>
+							<mainClass>de.hstr.bigdata.LineSplit.java</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
