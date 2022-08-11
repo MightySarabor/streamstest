@@ -11,6 +11,7 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 public class WordCount {
@@ -43,24 +44,26 @@ public class WordCount {
         //Properties zu Ende
 
         //Topology beschreiben
-        Topology topology = builder.build();
+        final Topology topology = builder.build();
+        final KafkaStreams streams = new KafkaStreams(topology, config);
+        final CountDownLatch latch = new CountDownLatch(1);
 
-        TopologyDescription description = topology.describe();
-        TopologyDescription.Subtopology subtopology = description.subtopologies().iterator().next();
-        for (TopologyDescription.Node node : subtopology.nodes()) {
-            System.err.println("-------------------");
-            System.err.println(node.name());
-            System.err.println(
-                    node.successors().stream().map(TopologyDescription.Node::name).collect(Collectors.toList()));
+        // attach shutdown handler to catch control-c
+        Runtime.getRuntime().addShutdownHook(new Thread("streams-shutdown-hook") {
+            @Override
+            public void run() {
+                streams.close();
+                latch.countDown();
+            }
+        });
+
+        try {
+            streams.start();
+            latch.await();
+        } catch (Throwable e) {
+            System.exit(1);
         }
-        // zu Ende
-
-        //Stream starten
-        @SuppressWarnings("resource")
-        KafkaStreams streams = new KafkaStreams(topology, config);
-
-        streams.start();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
+        System.exit(0);
     }
 }
+
