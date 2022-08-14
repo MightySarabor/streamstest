@@ -26,7 +26,7 @@ public class WordCount {
         KStream<String, String> source = builder.stream("fleschm-1");
         source.flatMapValues(value -> Arrays.asList(value.toLowerCase(Locale.getDefault()).split("\\W+")))
                 .groupBy((key, value) -> value)
-                .count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("counts-store"))
+                .count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("fleschm-counts-store"))
                 .toStream()
                 .to("fleschm-2", Produced.with(Serdes.String(), Serdes.Long()));
         // Code zu Ende
