@@ -47,7 +47,7 @@ public class Util implements AutoCloseable {
                     }
                 }
             } catch (Exception ex) {
-                logger.error(ex.toString());
+                System.err.println(ex.toString());
             }
         }
         public void close()  {
@@ -64,13 +64,13 @@ public class Util implements AutoCloseable {
     public void createTopics(final Properties allProps, List<NewTopic> topics)
             throws InterruptedException, ExecutionException, TimeoutException {
         try (final AdminClient client = AdminClient.create(allProps)) {
-            logger.info("Creating topics");
+            System.err.println("Creating topics");
 
             client.createTopics(topics).values().forEach( (topic, future) -> {
                 try {
                     future.get();
                 } catch (Exception ex) {
-                    logger.info(ex.toString());
+                    System.err.println(ex.toString());
                 }
             });
 
@@ -79,12 +79,12 @@ public class Util implements AutoCloseable {
                     .map(t -> t.name())
                     .collect(Collectors.toCollection(LinkedList::new));
 
-            logger.info("Asking cluster for topic descriptions");
+            System.err.println("Asking cluster for topic descriptions");
             client
                     .describeTopics(topicNames)
                     .allTopicNames()
                     .get(10, TimeUnit.SECONDS)
-                    .forEach((name, description) -> logger.info("Topic Description: {}", description.toString()));
+                    .forEach((name, description) -> System.err.println("Topic Description: {}" + description.toString()));
         }
     }
 

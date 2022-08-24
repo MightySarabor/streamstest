@@ -58,7 +58,6 @@ public class KafkaStreamsApplication {
         if (args.length < 1) {
             throw new IllegalArgumentException("This program takes one argument: the path to a configuration file.");
         }
-        logger.info("Test!!!!!!");
         Properties props = new Properties();
         try (InputStream inputStream = new FileInputStream(args[0])) {
             props.load(inputStream);
@@ -77,7 +76,6 @@ public class KafkaStreamsApplication {
 
             // Ramdomizer only used to produce sample data for this application, not typical usage
             try (Util.Randomizer rando = utility.startNewRandomizer(props, inputTopic)) {
-                System.err.println("<--- Stateful Example --->");
                 System.err.println("Building topology.");
                 KafkaStreams kafkaStreams = new KafkaStreams(
                         buildTopology(inputTopic, outputTopic),
@@ -85,7 +83,6 @@ public class KafkaStreamsApplication {
 
                 Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
 
-                System.err.printf("Kafka Streams 101 App Started");
                 System.err.println("Starting Kafka Streams.");
 
                 runKafkaStreams(kafkaStreams);
