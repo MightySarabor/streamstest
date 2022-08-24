@@ -38,7 +38,7 @@ public class KafkaStreamsApplication {
             throw new RuntimeException(e);
         }
 
-        logger.info("Streams Closed");
+        System.err.printf("Streams Closed");
     }
     static Topology buildTopology(String inputTopic, String outputTopic) {
         Serde<String> stringSerde = Serdes.String();
@@ -47,11 +47,10 @@ public class KafkaStreamsApplication {
 
         builder
                 .stream(inputTopic, Consumed.with(stringSerde, stringSerde))
-                .peek((k,v) -> logger.info("Observed event: {}", v))
+                .peek((k,v) -> System.err.printf("Observed event: {}", v))
                 .mapValues(s -> s.toUpperCase())
-                .peek((k,v) -> logger.info("Transformed event: {}", v))
+                .peek((k,v) -> System.err.printf("Transformed event: {}", v))
                 .to(outputTopic, Produced.with(stringSerde, stringSerde));
-
         return builder.build();
     }
     public static void main(String[] args) throws Exception {
@@ -86,7 +85,7 @@ public class KafkaStreamsApplication {
 
                 Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
 
-                logger.info("Kafka Streams 101 App Started");
+                System.err.printf("Kafka Streams 101 App Started");
                 System.err.println("Starting Kafka Streams.");
 
                 runKafkaStreams(kafkaStreams);
