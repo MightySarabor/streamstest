@@ -78,7 +78,8 @@ public class KafkaStreamsApplication {
 
             // Ramdomizer only used to produce sample data for this application, not typical usage
             try (Util.Randomizer rando = utility.startNewRandomizer(props, inputTopic)) {
-
+                System.err.println("<--- Stateful Example --->");
+                System.err.println("Building topology.");
                 KafkaStreams kafkaStreams = new KafkaStreams(
                         buildTopology(inputTopic, outputTopic),
                         props);
@@ -86,7 +87,10 @@ public class KafkaStreamsApplication {
                 Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
 
                 logger.info("Kafka Streams 101 App Started");
+                System.err.println("Starting Kafka Streams.");
+
                 runKafkaStreams(kafkaStreams);
+                System.err.println("Shutting down Kafka Streams.");
 
             }
         }
