@@ -47,9 +47,9 @@ public class KafkaStreamsApplication {
 
         builder
                 .stream(inputTopic, Consumed.with(stringSerde, stringSerde))
-                .peek((k,v) -> System.err.printf("Observed event: {} \n" , v))
+                .peek((k,v) -> System.err.printf("Observed Event: \n", k, v))
                 .mapValues(s -> s.toUpperCase())
-                .peek((k,v) -> System.err.printf("Transformed event: {}\n", v))
+                .peek((k,v) -> System.err.printf("Transformed Event: \n", k, v))
                 .to(outputTopic, Produced.with(stringSerde, stringSerde));
         return builder.build();
     }
