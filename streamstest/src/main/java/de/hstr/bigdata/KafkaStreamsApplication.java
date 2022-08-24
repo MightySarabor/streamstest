@@ -47,9 +47,9 @@ public class KafkaStreamsApplication {
 
         builder
                 .stream(inputTopic, Consumed.with(stringSerde, stringSerde))
-                .peek((k,v) -> System.err.printf("Observed event: {}", v))
+                .peek((k,v) -> System.err.printf("Observed event: {} \n" , v))
                 .mapValues(s -> s.toUpperCase())
-                .peek((k,v) -> System.err.printf("Transformed event: {}", v))
+                .peek((k,v) -> System.err.printf("Transformed event: {}\n", v))
                 .to(outputTopic, Produced.with(stringSerde, stringSerde));
         return builder.build();
     }
@@ -58,7 +58,7 @@ public class KafkaStreamsApplication {
         if (args.length < 1) {
             throw new IllegalArgumentException("This program takes one argument: the path to a configuration file.");
         }
-
+        logger.info("Test!!!!!!");
         Properties props = new Properties();
         try (InputStream inputStream = new FileInputStream(args[0])) {
             props.load(inputStream);
