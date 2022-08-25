@@ -52,6 +52,7 @@ public class StatefulExample {
         config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         config.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
+        config.put("value.serializer","org.apache.kafka.cpmmon.serialization.StringSerializer");
         config.put("security.protocol", "SASL_PLAINTEXT");
         config.put("enable.auto.commit", "true");
         config.put("auto.commit.interval.ms", "100");
