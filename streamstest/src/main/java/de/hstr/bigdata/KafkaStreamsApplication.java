@@ -54,7 +54,7 @@ public class KafkaStreamsApplication {
         return builder.build();
     }
     public static void main(String[] args) throws Exception {
-
+        System.setProperty("java.security.auth.login.config", "/home/fleschm/kafka.jaas");
         if (args.length < 1) {
             throw new IllegalArgumentException("This program takes one argument: the path to a configuration file.");
         }
