@@ -63,6 +63,8 @@ public class StatefulExample {
         streams = new KafkaStreams(topology, config);
 
         System.err.println("Starting Kafka Streams.");
+        Util utility = new Util();
+        Util.Randomizer rando = utility.startNewRandomizer(config, "fleschm-1")
         streams.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(StatefulExample::shutdown));
