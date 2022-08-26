@@ -50,7 +50,7 @@ public class StatefulExample {
     }
     private static KafkaStreams streams;
     static Topology buildTopology(String inputTopic, String outputTopic) {
-        System.setProperty("java.security.auth.login.config", "/home/fleschm/kafka.jaas");
+        //System.setProperty("java.security.auth.login.config", "/home/fleschm/kafka.jaas");
         StreamsBuilder builder = new StreamsBuilder();
 
         final KStream<String, String> textLines = builder.stream(inputTopic);

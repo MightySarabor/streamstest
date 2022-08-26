@@ -6,8 +6,7 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
-import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.kstream.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,9 +40,22 @@ public class KafkaStreamsApplication {
         System.err.printf("Streams Closed");
     }
     static Topology buildTopology(String inputTopic, String outputTopic) {
-        Serde<String> stringSerde = Serdes.String();
 
         StreamsBuilder builder = new StreamsBuilder();
+
+        final KStream<String, String> textLines = builder.stream(inputTopic);
+        KTable<String, Long> count = textLines.flatMapValues(value -> Arrays.asList(value.toLowerCase().split("\\W+")))
+                .peek((k, v) -> System.err.printf("Word: (%s, %s)\n", k, v))
+                .groupBy((key, value) -> value)
+                .count(Materialized.as("fleschm-store"));
+
+        count.toStream()
+                .peek((key, value) -> System.err.printf("Outgoing record (%s, %s)\n", key, value))
+                .to(outputTopic, Produced.with(Serdes.String(), Serdes.Long()));
+        /*Serde<String> stringSerde = Serdes.String();
+
+        StreamsBuilder builder = new StreamsBuilder();
+
 
         builder
                 .stream(inputTopic, Consumed.with(stringSerde, stringSerde))
@@ -51,7 +63,11 @@ public class KafkaStreamsApplication {
                 .mapValues(s -> s.toUpperCase())
                 .peek((k,v) -> System.err.printf("Transformed Event:" + v + "\n"))
                 .to(outputTopic, Produced.with(stringSerde, stringSerde));
+
+         */
         return builder.build();
+
+
     }
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
