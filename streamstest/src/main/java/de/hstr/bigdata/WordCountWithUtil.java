@@ -44,6 +44,14 @@ public class WordCountWithUtil {
                     Arrays.asList(
                             new NewTopic(inputTopic, Optional.empty(), Optional.empty()),
                             new NewTopic(outputTopic, Optional.empty(), Optional.empty())));
+
+            try (Util.Randomizer rando = utility.startNewRandomizer(props, inputTopic)) {
+                System.err.println("Building topology.");
+                KafkaStreams kafkaStreams = new KafkaStreams(
+                        buildTopology(inputTopic, outputTopic),
+                        props);
+            }
+
         }
     }
 }
