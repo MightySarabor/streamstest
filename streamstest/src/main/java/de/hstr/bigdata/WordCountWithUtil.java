@@ -16,6 +16,26 @@ import java.util.concurrent.CountDownLatch;
 
 public class WordCountWithUtil {
 
+    static void runKafkaStreams(final KafkaStreams streams) {
+        final CountDownLatch latch = new CountDownLatch(1);
+
+        // attach shutdown handler to catch control-c
+        Runtime.getRuntime().addShutdownHook(new Thread("streams-shutdown-hook") {
+            @Override
+            public void run() {
+                streams.close();
+                latch.countDown();
+            }
+        });
+
+        try {
+            streams.start();
+            latch.await();
+        } catch (Throwable e) {
+            System.exit(1);
+        }
+        System.exit(0);
+    }
 
     static Topology buildTopology(String inputTopic, String outputTopic) {
         final StreamsBuilder builder = new StreamsBuilder();
@@ -51,9 +71,15 @@ public class WordCountWithUtil {
                 KafkaStreams kafkaStreams = new KafkaStreams(
                         buildTopology(inputTopic, outputTopic),
                         props);
+
+                System.err.println("Starting Kafka Streams.");
+                runKafkaStreams(kafkaStreams);
+                System.err.println("Shutting down Kafka Streams.");
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+
+
 
         }
     }

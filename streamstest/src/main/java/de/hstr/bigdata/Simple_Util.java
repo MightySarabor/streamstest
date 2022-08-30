@@ -56,9 +56,9 @@ public class Simple_Util implements AutoCloseable {
     }
 
     public void close() {
-        //if (executorService != null) {
-          //  executorService.shutdownNow();
-          //  executorService = null;
-       // }
+        if (executorService != null) {
+            executorService.shutdownNow();
+            executorService = null;
+        }
     }
 }
