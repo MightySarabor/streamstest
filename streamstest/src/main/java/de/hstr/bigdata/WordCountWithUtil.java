@@ -18,23 +18,21 @@ public class WordCountWithUtil {
 
     static void runKafkaStreams(final KafkaStreams streams) {
         final CountDownLatch latch = new CountDownLatch(1);
-
-        // attach shutdown handler to catch control-c
-        Runtime.getRuntime().addShutdownHook(new Thread("streams-shutdown-hook") {
-            @Override
-            public void run() {
-                streams.close();
+        streams.setStateListener((newState, oldState) -> {
+            if (oldState == KafkaStreams.State.RUNNING && newState != KafkaStreams.State.RUNNING) {
                 latch.countDown();
             }
         });
 
+        streams.start();
+
         try {
-            streams.start();
             latch.await();
-        } catch (Throwable e) {
-            System.exit(1);
+        } catch (final InterruptedException e) {
+            throw new RuntimeException(e);
         }
-        System.exit(0);
+
+        System.err.printf("Streams Closed");
     }
 
     static Topology buildTopology(String inputTopic, String outputTopic) {
@@ -57,21 +55,24 @@ public class WordCountWithUtil {
         //Topic Namen zu weisen
         final String inputTopic = props.getProperty("input.topic.name");
         final String outputTopic = props.getProperty("output.topic.name");
-
+        final String partitions = props.getProperty("num.partitions");
+        final String replication = props.getProperty("num.replication");
         //Topics erstellen (falls noch keine da sind)
         try (Simple_Util utility = new Simple_Util()) {
 
             utility.createTopics(
                     props,
                     Arrays.asList(
-                            new NewTopic(inputTopic, Optional.empty(), Optional.empty()),
-                            new NewTopic(outputTopic, Optional.empty(), Optional.empty())));
+                            new NewTopic(inputTopic, Integer.parseInt(partitions), (short) Integer.parseInt(replication)),
+                            new NewTopic(outputTopic, Integer.parseInt(partitions), (short) Integer.parseInt(replication))));
 
             try{
                 System.err.println("Building topology.");
                 KafkaStreams kafkaStreams = new KafkaStreams(
                         buildTopology(inputTopic, outputTopic),
                         props);
+
+                Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
 
                 System.err.println("Starting Kafka Streams.");
                 runKafkaStreams(kafkaStreams);
