@@ -38,7 +38,7 @@ public class WordCountWithUtil {
         final String outputTopic = props.getProperty("output.topic.name");
 
         //Topics erstellen (falls noch keine da sind)
-        try (Util utility = new Util()) {
+        try (Simple_Util utility = new Simple_Util()) {
 
             utility.createTopics(
                     props,
@@ -46,11 +46,13 @@ public class WordCountWithUtil {
                             new NewTopic(inputTopic, Optional.empty(), Optional.empty()),
                             new NewTopic(outputTopic, Optional.empty(), Optional.empty())));
 
-            try (Util.Randomizer rando = utility.startNewRandomizer(props, inputTopic)) {
+            try{
                 System.err.println("Building topology.");
                 KafkaStreams kafkaStreams = new KafkaStreams(
                         buildTopology(inputTopic, outputTopic),
                         props);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
 
         }
