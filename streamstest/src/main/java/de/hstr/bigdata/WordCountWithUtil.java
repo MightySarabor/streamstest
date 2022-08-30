@@ -39,8 +39,9 @@ public class WordCountWithUtil {
 
     static Topology buildTopology(String inputTopic, String outputTopic) {
         final StreamsBuilder builder = new StreamsBuilder();
-        final KStream<String, String> source = builder.stream(inputTopic);
-        source.to(outputTopic);
+        builder.stream(inputTopic).
+                peek((k,v) -> System.err.printf("Observed Event:" + v + "\n")).
+                to(outputTopic);
         final Topology topology = builder.build();
         System.err.println(topology.describe());
         return topology;
