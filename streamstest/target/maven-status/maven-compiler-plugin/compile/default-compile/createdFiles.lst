@@ -1,4 +1,6 @@
 de\hstr\bigdata\LineSplit.class
+de\hstr\bigdata\jsonparser\Json.class
+de\hstr\bigdata\StatefulExample.class
 de\hstr\bigdata\StreamExample.class
 de\hstr\bigdata\WordCount.class
 de\hstr\bigdata\WordCount$1.class
