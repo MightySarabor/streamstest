@@ -37,8 +37,8 @@ public class consumer1 {
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : records) {
-                logger.info("Key: " + record.key() + ", Value:" + record.value());
-                logger.info("Partition:" + record.partition() + ",Offset:" + record.offset());
+                System.err.println("Key: " + record.key() + ", Value:" + record.value());
+                System.err.println("Partition:" + record.partition() + ",Offset:" + record.offset());
             }
         }
     }
