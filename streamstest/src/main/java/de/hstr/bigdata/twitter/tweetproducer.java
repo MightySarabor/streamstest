@@ -35,7 +35,7 @@ public class tweetproducer {
     }
 
     public void run() {
-        logger.info("Setup");
+        System.err.println("Setup");
 
         BlockingQueue<String> msgQueue = new
                 LinkedBlockingQueue<String>(1000);//Specify the size accordingly.
@@ -53,12 +53,12 @@ public class tweetproducer {
                 client.stop();
             }
             if (msg != null) {
-                logger.info(msg);
+                System.err.println(msg);
                 producer.send(new ProducerRecord<>("twitter_topic", null, msg), new Callback() {
                     @Override
                     public void onCompletion(RecordMetadata recordMetadata, Exception e) {
                         if(e!=null){
-                            logger.error("Something went wrong",e);
+                            System.err.println("Something went wrong",e);
                         }
                     }
                 });
@@ -66,7 +66,7 @@ public class tweetproducer {
 
         }//Specify the topic name, key value, msg
 
-        logger.info("This is the end");//When the reading is complete, inform logger
+        System.err.println("This is the end");//When the reading is complete, inform logger
     }
 
     public Client tweetclient(BlockingQueue<String> msgQueue) {
