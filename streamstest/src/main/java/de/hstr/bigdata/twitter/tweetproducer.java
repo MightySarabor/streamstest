@@ -58,7 +58,7 @@ public class tweetproducer {
                     @Override
                     public void onCompletion(RecordMetadata recordMetadata, Exception e) {
                         if(e!=null){
-                            System.err.println("Something went wrong",e);
+                            System.err.println("Something went wrong" + e);
                         }
                     }
                 });
