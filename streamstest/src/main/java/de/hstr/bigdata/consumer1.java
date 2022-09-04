@@ -33,11 +33,12 @@ public class consumer1 {
         consumer.subscribe(Arrays.asList(topic));
 
         //poll und print
-
+        System.err.println("Start Polling:");
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : records) {
                 System.err.println("Key: " + record.key() + ", Value:" + record.value());
+                System.err.println("Start Polling:");
                 System.err.println("Partition:" + record.partition() + ",Offset:" + record.offset());
             }
         }

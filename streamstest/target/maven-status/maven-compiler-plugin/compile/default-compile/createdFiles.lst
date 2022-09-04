@@ -4,5 +4,6 @@ de\hstr\bigdata\KafkaStreamsApplication.class
 de\hstr\bigdata\Util$Randomizer.class
 de\hstr\bigdata\StatefulExample.class
 de\hstr\bigdata\Util.class
+de\hstr\bigdata\consumer1.class
 de\hstr\bigdata\WordCount.class
 de\hstr\bigdata\WordCount$1.class
