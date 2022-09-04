@@ -33,7 +33,7 @@ public class producer1 {
             public void onCompletion(RecordMetadata recordMetadata, Exception e) {
                 Logger logger = LoggerFactory.getLogger(producer1.class);
                 if (e== null) {
-                    logger.info("Successfully received the details as: \n" +
+                    System.err.println("Successfully received the details as: \n" +
                             "Topic:" + recordMetadata.topic() + "\n" +
                             "Partition:" + recordMetadata.partition() + "\n" +
                             "Offset" + recordMetadata.offset() + "\n" +
@@ -41,7 +41,7 @@ public class producer1 {
                 }
 
                 else {
-                    logger.error("Can't produce,getting error",e);
+                    System.err.println("Can't produce,getting error" + e);
 
                 }
             }
