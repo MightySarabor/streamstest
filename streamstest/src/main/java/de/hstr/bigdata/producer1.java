@@ -26,7 +26,26 @@ public class producer1 {
         ProducerRecord<String, String> record = new ProducerRecord<String, String>("my_first", "Hye Kafka");
 
         //Invoke object of producerRecord
-        first_producer.send(record);
+        //first_producer.send(record);
+
+        first_producer.send(record, new Callback() {
+            public void onCompletion(RecordMetadata recordMetadata, Exception e) {
+                Logger logger=LoggerFactory.getLogger(producer1call.class);
+                if (e== null) {
+                    logger.info("Successfully received the details as: \n" +
+                            "Topic:" + recordMetadata.topic() + "\n" +
+                            "Partition:" + recordMetadata.partition() + "\n" +
+                            "Offset" + recordMetadata.offset() + "\n" +
+                            "Timestamp" + recordMetadata.timestamp());
+                }
+
+                else {
+                    logger.error("Can't produce,getting error",e);
+
+                }
+            }
+        });
+
         first_producer.flush();
         first_producer.close();
 
