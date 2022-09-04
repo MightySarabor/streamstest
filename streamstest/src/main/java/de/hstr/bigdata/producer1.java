@@ -1,11 +1,12 @@
 package de.hstr.bigdata;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 
 public class producer1 {
@@ -30,7 +31,7 @@ public class producer1 {
 
         first_producer.send(record, new Callback() {
             public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-                Logger logger=LoggerFactory.getLogger(producer1call.class);
+                Logger logger = LoggerFactory.getLogger(producer1.class);
                 if (e== null) {
                     logger.info("Successfully received the details as: \n" +
                             "Topic:" + recordMetadata.topic() + "\n" +
